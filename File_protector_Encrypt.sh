@@ -5,10 +5,14 @@ File_list=()
 File_type=0
 File_id=0
 File_maxid=0
-if [ ! -f index ]; then
-	exit
+if [ -f index.gpg ]; then
+	gpg -r $GPG_USERNAME -o index -d index.gpg 2>/dev/null
+else
+	if [  ! -f index ]; then
+		exit
+	fi
 fi
-for i in `gpg -r $GPG_USERNAME -d index.gpg 2>/dev/null` 
+for i in `cat index ` 
 do
 	if [ "$File_type" -eq 0 ] ; then
 		File_id=$i
@@ -21,8 +25,7 @@ do
 	File_type=$((File_type+1))
 	File_type=$((File_type%2))
 done
-rm index
-for i in `find . -maxdepth 1 -type f ! -name "*.gpg"` 
+for i in `find . -maxdepth 1 -type f ! -name "*.gpg" ! -name "index"` 
 do
 	#echo 'Trying to decrypt:$i'
 	OriginName=$i

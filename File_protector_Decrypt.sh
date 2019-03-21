@@ -12,14 +12,15 @@ else
 		if [ "$File_type" -eq 0 ] ; then
 			File_id=$i
 		else
-			File_list[File_id]=$i
+			File_list[File_id]=$(echo $i | base64 -d)
 		fi
 		File_type=$((File_type+1))
 		File_type=$((File_type%2))
 	done
 fi
 touch index
-for i in `find . -maxdepth 1 -type f -name "*.gpg" ! -name "index.gpg" ` 
+IFS=$'\n'
+for i in `find . -maxdepth 1 -type f -name "*.gpg" ! -name "index.gpg" `
 do
 	#echo 'Trying to decrypt:$i'
 	OriginName=$i

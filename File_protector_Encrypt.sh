@@ -25,14 +25,18 @@ do
 	File_type=$((File_type+1))
 	File_type=$((File_type%2))
 done
-for i in `find . -maxdepth 1 -type f ! -name "*.gpg" ! -name "index"` 
+
+IFS=$'\n'
+for i in `find . -maxdepth 1 -type f ! -name "*.gpg" ! -name "index"`
 do
 	#echo 'Trying to decrypt:$i'
+
 	OriginName=$i
+	OriginName_base64=`echo $i | base64 -w 0`
 	File_maxid=$(($File_maxid+1))
 	NewName=$File_maxid.gpg
 	echo $OriginName '->' $NewName
-	echo $File_maxid $i  >> index
+	echo $File_maxid "$OriginName_base64"  >> index
 	gpg -r $GPG_USERNAME -o $NewName -e $OriginName 2>/dev/null
 	if [ -f "$NewName" ]; then
 		rm $OriginName

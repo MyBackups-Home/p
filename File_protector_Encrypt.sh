@@ -29,8 +29,6 @@ done
 IFS=$'\n'
 for i in `find . -maxdepth 1 -type f ! -name "*.gpg" ! -name "index"`
 do
-	#echo 'Trying to decrypt:$i'
-
 	OriginName=$i
 	OriginName_base64=`echo $i | base64`
 	OriginName_base64=$(echo $OriginName_base64| awk '{printf "%s",$1}' |sed 's/ //g')
@@ -42,7 +40,7 @@ do
 	if [ -f "$NewName" ]; then
 		rm $OriginName
 	else
-		echo 'ERROR,Could not decrypt files.please check your gpg and keys!'
+		echo 'ERROR,Could not encrypt files.please check your gpg and keys!'
 		exit
 	fi
 done
